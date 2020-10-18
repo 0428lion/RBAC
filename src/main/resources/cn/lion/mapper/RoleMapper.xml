@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.lion.mapper.RoleMapper">
+    <select id="findAll" resultType="cn.lion.domain.Role">
+        SELECT id,name,sn FROM role
+    </select>
+    <delete id="delete">
+        delete from role where id=#{id}
+    </delete>
+    <select id="findById" resultType="cn.lion.domain.Role" >
+        select id,name,sn from role where id=#{id}
+    </select>
+    <update id="updateById">
+        update role set name =#{name },sn=#{sn} where id=#{id}
+    </update>
+    <insert id="insert"  keyProperty="id" useGeneratedKeys="true">
+        insert into role (name, sn) values (#{name}, #{sn})
+    </insert>
+
+</mapper>

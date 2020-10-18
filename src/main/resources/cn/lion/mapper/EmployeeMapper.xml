@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.lion.mapper.EmployeeMapper">
+        <resultMap id="baseMap" type="cn.lion.domain.Employee">
+                <id column="id" property="id"/>
+                <result column="name" property="name"/>
+                <result column="email" property="email"/>
+                <result column="password" property="password"/>
+                <result column="age" property="age"/>
+                <result column="admin" property="admin"/>
+                <!--这个标签是专门处理对象关系映射的-->
+                <association property="dept" javaType="cn.lion.domain.Department" columnPrefix="d_">
+                        <id column="id" property="id"/>
+                        <result column="name" property="name"/>
+                </association>
+        </resultMap>
+
+        <select id="selectList"  resultMap="baseMap">
+                select e.id, e.name, e.email,  e.password,  e.age,  e.admin , d.id d_id ,d.name d_name from employee e
+                left join department d on d.id = e.dept_id
+                <where>
+                        <if test="keyword!=null and keyword !=''">
+                                and ( e.name like concat('%',#{keyword},'%') or e.email like concat('%',#{keyword},'%') )
+                        </if>
+                        <if test="deptId!=-1">
+                                and e.dept_id = #{deptId}
+                        </if>
+                </where>
+        </select>
+        <delete id="delete">
+                delete from employee where id=#{id}
+        </delete>
+        <select id="findById" resultMap="baseMap">
+                select e.id, e.name, e.email,  e.password,  e.age,  e.admin , d.id d_id ,d.name d_name from employee e
+                left join department d on d.id = e.dept_id where e.id=#{id}
+        </select>
+        <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+                insert into employee(name,email,password,age,admin,dept_id) values(#{name},#{email},#{password},#{age},#{admin},#{dept.id})
+        </insert>
+        <update id="updateById">
+                update employee set name =#{name },email=#{email},age=#{age},admin=#{admin},dept_id=#{dept.id} where id=#{id}
+        </update>
+
+
+
+</mapper>
